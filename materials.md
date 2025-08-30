@@ -1,4 +1,4 @@
----
+<img width="767" height="88" alt="image" src="https://github.com/user-attachments/assets/94b97392-d8fa-434d-aa04-400460bfbeab" />---
 layout: page
 title: Materials
 permalink: /materials/
@@ -13,7 +13,7 @@ permalink: /materials/
 
 ## Graphical tools
 * [https://www.wolframalpha.com/](https://www.wolframalpha.com/)
-* [https://wolfreealpha.gitlab.io/](https://wolfreealpha.gitlab.io/)
+* [https://gpt.wolfram.com/index.php.zh-tw](https://gpt.wolfram.com/index.php.zh-tw)
 * [https://www.desmos.com/calculator?lang=zh-TW](https://www.desmos.com/calculator?lang=zh-TW)
 * [https://www.geogebra.org/](https://www.geogebra.org/)
 
