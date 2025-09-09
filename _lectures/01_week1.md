@@ -16,4 +16,4 @@ links:
 - [[chapter P slides (courtesy of professor Chien-Hong Cho)]](/nsysu-calculus1/static_files/presentations/Ch0_Slidehandout.pdf)
 - Chapter P
 - Chapter 1.1~1.3
-- [[chapter 1 summary slides (courtesy of professor Fu-Chuen Chang)]](/nsysu-calculus1-2024/static_files/presentations/Chap01_Summary.pdf)
+- [[chapter 1 summary slides (courtesy of professor Fu-Chuen Chang)]](/nsysu-calculus1/static_files/presentations/Chap01_Summary.pdf)
