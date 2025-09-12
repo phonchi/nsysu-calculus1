@@ -17,3 +17,4 @@ links:
 - Chapter P
 - Chapter 1.1~1.3
 - [[chapter 1 summary slides (courtesy of professor Fu-Chuen Chang)]](/nsysu-calculus1/static_files/presentations/Chap01_Summary.pdf)
+- [[Recorded video]](https://www.youtube.com/playlist?list=PLHNZtBNWQ-86-AbBfrcguD6O8nbzLKkK5)
