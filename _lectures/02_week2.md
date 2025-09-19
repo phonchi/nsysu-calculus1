@@ -13,3 +13,4 @@ links:
 **Suggested Readings:**
 - Chapter 1.4~2.1
 - [[chapter 2 summary slides (courtesy of professor Fu-Chuen Chang)]](/nsysu-calculus1/static_files/presentations/Chap02_Summary.pdf)
+- [[Recorded video]](https://www.youtube.com/playlist?list=PLHNZtBNWQ-87HkHj9Iw_YTs1uuOjPVinA)
