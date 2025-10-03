@@ -14,3 +14,4 @@ links:
 - Chapter 2.5~3.3
 - [[chapter 3 summary slides (courtesy of professor Fu-Chuen Chang)]](/nsysu-calculus1/static_files/presentations/Chap03_Summary.pdf)
 - [[Intuition of Implicit differentiation](https://www.3blue1brown.com/lessons/implicit-differentiation)]
+- [[Recorded video]](https://www.youtube.com/playlist?list=PLHNZtBNWQ-86M5heOsCcZi71559AQHHZU)
