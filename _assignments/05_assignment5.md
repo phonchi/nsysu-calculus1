@@ -3,7 +3,7 @@ type: assignment
 date: 2025-10-17T14:00:00+3:30
 title: 'Assignment #5'
 attachment: /static_files/assignments/Assignment_5.pdf
-
+solutions: /static_files/assignments/solution_5.pdf
 
 due_event: 
     type: due
