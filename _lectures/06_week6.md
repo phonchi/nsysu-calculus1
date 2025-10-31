@@ -1,7 +1,7 @@
 ---
 type: lecture
 date: 2025-10-17
-title: Differentiation, Applications of Differentiation
+title: Applications of Differentiation
 tldr: 
 thumbnail: 
 hide_from_announcments: true
