@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微積分 U-Substitution：幾何變換與微分形式</title>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #2980b9; /* 專業藍 */
+            --highlight-red: #c0392b;
+            --highlight-green: #27ae60;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+        }
+        body {
+            font-family: "Times New Roman", "Microsoft JhengHei", serif; /* 使用襯線字體增加學術感 */
+            background-color: var(--bg-color);
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border-radius: 8px;
+        }
+        
+        /* 標題區塊 */
+        header { border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 30px; }
+        h1 { margin: 0; font-size: 2.2rem; color: var(--primary-color); }
+        h2 { font-size: 1.5rem; color: var(--accent-color); margin-top: 30px; border-left: 5px solid var(--accent-color); padding-left: 15px; }
+        h3 { font-size: 1.2rem; font-weight: bold; margin-top: 20px; color: #555; }
+        
+        /* 數學公式區塊 */
+        .math-display {
+            background: #f4f6f7;
+            padding: 20px;
+            border-radius: 4px;
+            border: 1px solid #e1e4e8;
+            margin: 20px 0;
+            text-align: center;
+            overflow-x: auto;
+        }
+        
+        /* 視覺化控制區 */
+        .viz-container {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        canvas {
+            background: #fff;
+            border: 1px solid #eee;
+            width: 100%;
+            display: block;
+            margin: 20px auto;
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        input[type=range] { width: 80%; cursor: pointer; }
+        
+        /* 數據顯示 */
+        .data-panel {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 100%;
+            text-align: center;
+            font-family: "Courier New", monospace;
+        }
+        .data-box {
+            border: 1px solid #eee;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .data-label { display: block; font-size: 0.8rem; color: #777; margin-bottom: 5px; }
+        .data-val { font-weight: bold; font-size: 1.1rem; }
+        
+        /* 註釋文字 */
+        .annotation {
+            font-size: 0.95rem;
+            background: #eef6fb;
+            padding: 15px;
+            border-left: 4px solid var(--accent-color);
+            margin-top: 20px;
+        }
+        
+        .red-text { color: var(--highlight-red); }
+        .green-text { color: var(--highlight-green); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Integration by Substitution</h1>
+        <p style="color: #666;">The Geometry of Variable Transformation</p>
+    </header>
+
+    <section>
+        <h2>1. 理論背景：變數變換定理</h2>
+        <p>
+            積分變數變換 (Substitution Rule) 是微分連鎖律 (Chain Rule) 的逆運算。若函數 \(u = g(x)\) 是區間 \([a, b]\) 上可微的單調函數，且 \(f\) 在其值域上連續，則：
+        </p>
+        <div class="math-display">
+            $$ \int_a^b f(g(x)) \cdot g'(x) \, dx = \int_{g(a)}^{g(b)} f(u) \, du $$
+        </div>
+        <p>在此公式中，項 \(g'(x)\) 扮演了 <strong>Jacobian (縮放因子)</strong> 的角色。它描述了從 \(x\) 空間映射到 \(u\) 空間時，局部長度的變形率。</p>
+        
+        <h3>微分形式 (Differential Forms) 的關係</h3>
+        <p>根據微分的定義，我們有線性近似關係：</p>
+        <div class="math-display">
+            $$ du = g'(x) \, dx \implies dx = \frac{1}{g'(x)} \, du $$
+        </div>
+        <p>
+            這表示若我們在 \(u\) 空間取均勻分割 (即 \(du\) 為常數)，則對應回 \(x\) 空間的分割 \(dx\) 將會是非均勻的。其長度與導數 \(g'(x)\) 成反比。
+        </p>
+    </section>
+
+    <section>
+        <h2>2. 範例演示：三次至線性的映射</h2>
+        <p>我們考慮以下積分，透過變換將非線性的被積函數簡化為線性函數：</p>
+        <div class="math-display">
+            $$ I = \int_0^2 2x(x^2+1) \, dx $$
+        </div>
+        <p>令 \( u = g(x) = x^2 + 1 \)，則 \( du = 2x \, dx \)。積分轉化為：</p>
+        <div class="math-display">
+            $$ \int_1^5 u \, du $$
+        </div>
+    </section>
+
+    <div class="viz-container">
+        <h3>3. 幾何映射視覺化 (Geometric Mapping Visualization)</h3>
+        <p>
+            下方圖表展示了空間的拉伸。我們在 \(u\) 軸上固定單位長度，觀察其在 \(x\) 軸上的原像 (Pre-image) 如何變化。
+        </p>
+        
+        <div class="controls">
+            <label for="slider"><strong>控制變數 \(u\) 的位置 (區間 [1, 5])</strong></label>
+            <input type="range" id="slider" min="0" max="100" value="50">
+            
+            <div class="data-panel">
+                <div class="data-box">
+                    <span class="data-label">X-Differential (\(dx\))</span>
+                    <span id="valDx" class="data-val red-text">0.00</span>
+                </div>
+                <div class="data-box">
+                    <span class="data-label">Scaling Factor (\(g'(x)=2x\))</span>
+                    <span id="valScale" class="data-val" style="color: #8e44ad;">0.00</span>
+                </div>
+                <div class="data-box">
+                    <span class="data-label">U-Differential (\(du\))</span>
+                    <span id="valDu" class="data-val green-text">0.50 (Const)</span>
+                </div>
+            </div>
+        </div>
+
+        <canvas id="canvas" width="800" height="600"></canvas>
+
+        <div class="annotation">
+            <strong>觀察重點 (Key Observations)：</strong>
+            <ul>
+                <li>
+                    <strong>空間壓縮 (Space Compression)：</strong> 
+                    請觀察中間的虛線 (Mapping Lines)。當 \(x\) 增大時，\(u = x^2+1\) 的增長速度加快。這導致 \(u\) 軸上均勻的網格，映射回 \(x\) 軸時變得越來越密集。
+                </li>
+                <li>
+                    <strong>微分關係 (Differential Relationship)：</strong>
+                    數值顯示 \(dx \approx du / 2x\)。當放大倍率 \(2x\) 增大時，為了維持 \(du\) 固定，\(dx\) 必須減小。這證明了 \(dx\) 是 \(du\) 的逆向映射 (Pull-back)。
+                </li>
+                <li>
+                    <strong>積分守恆 (Conservation)：</strong>
+                    雖然 \(dx\) (紅色區塊寬度) 變窄，但函數高度 \(2x\) 變高。兩者乘積等於 \(du\) (綠色區塊寬度)。
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const slider = document.getElementById('slider');
+    
+    // 繪圖參數設定
+    const margin = { top: 30, right: 50, bottom: 30, left: 60 };
+    const gap = 80; // 上下圖間距
+    const plotHeight = (canvas.height - margin.top - margin.bottom - gap) / 2;
+    const plotWidth = canvas.width - margin.left - margin.right;
+    
+    const topOriginY = margin.top + plotHeight;
+    const botOriginY = margin.top + plotHeight + gap + plotHeight;
+    
+    // 定義域與值域
+    // x: [0, 2]
+    // u = x^2 + 1: [1, 5]
+    const xMin = 0, xMax = 2.0;
+    const uMin = 1, uMax = 5.0;
+    
+    // Y軸極值 (用於正規化高度)
+    // Top: y = 2x(x^2+1), max at x=2 is 20.
+    const yMaxTop = 22; 
+    // Bottom: y = u, max at u=5 is 5.
+    const yMaxBot = 5.5;
+
+    // 座標轉換函數 (Mapping Functions)
+    const scaleX = (val) => margin.left + ((val - xMin) / (xMax - xMin)) * plotWidth;
+    const scaleU = (val) => margin.left + ((val - uMin) / (uMax - uMin)) * plotWidth;
+    const scaleY_Top = (val) => topOriginY - (val / yMaxTop) * plotHeight;
+    const scaleY_Bot = (val) => botOriginY - (val / yMaxBot) * plotHeight;
+
+    // 數學函數定義
+    const funcX = (x) => 2 * x * (x * x + 1); // The "Non-linear" Integrand
+    const funcU = (u) => u;                   // The "Linear" Integrand
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // 取得滑桿數值 (控制 u)
+        let perc = parseInt(slider.value) / 100;
+        let currentU = uMin + perc * (uMax - uMin - 0.6); // 留出 du 空間
+        let currentX = Math.sqrt(currentU - 1); // Inverse mapping
+
+        // 1. 繪製座標軸 (Draw Axes)
+        drawAxis(topOriginY, "x", "f(x) = 2x(x² + 1)", "#c0392b");
+        drawAxis(botOriginY, "u", "f(u) = u", "#27ae60");
+
+        // 2. 繪製函數曲線 (Draw Curves)
+        drawCurve(funcX, xMin, xMax, scaleX, scaleY_Top, "#c0392b");
+        drawCurve(funcU, uMin, uMax, scaleU, scaleY_Bot, "#27ae60");
+
+        // 3. 繪製映射網格 (Mapping Lines)
+        // 關鍵：我們在 U 軸均勻取點，反向映射回 X 軸
+        ctx.save();
+        ctx.strokeStyle = "rgba(142, 68, 173, 0.2)"; // 淡紫色
+        ctx.setLineDash([4, 4]); // 虛線
+        let gridSteps = 16;
+        for (let i = 0; i <= gridSteps; i++) {
+            let uGrid = uMin + (i / gridSteps) * (uMax - uMin);
+            let xGrid = Math.sqrt(uGrid - 1);
+            
+            if (xGrid >= xMin && xGrid <= xMax) {
+                ctx.beginPath();
+                ctx.moveTo(scaleX(xGrid), topOriginY);
+                ctx.lineTo(scaleU(uGrid), botOriginY - plotHeight); // 連接到下圖頂部
+                ctx.stroke();
+            }
+        }
+        ctx.restore();
+
+        // 4. 繪製積分切片 (Differential Slices)
+        let du = 0.5; // 設定固定 du
+        let uEnd = currentU + du;
+        let xEnd = Math.sqrt(uEnd - 1);
+        
+        let dxVal = xEnd - currentX;
+        let scalingFactor = 2 * currentX; // g'(x)
+
+        // 更新數據面板
+        document.getElementById('valDx').innerText = dxVal.toFixed(4);
+        document.getElementById('valScale').innerText = scalingFactor.toFixed(2);
+
+        // 填充上圖面積 (紅色)
+        fillArea(funcX, currentX, xEnd, scaleX, scaleY_Top, "rgba(192, 57, 43, 0.3)");
+        // 填充下圖面積 (綠色)
+        fillArea(funcU, currentU, uEnd, scaleU, scaleY_Bot, "rgba(39, 174, 96, 0.3)");
+
+        // 5. 繪製動態連接線 (Active Mapping Lines)
+        ctx.strokeStyle = "#8e44ad"; // 紫色
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([2, 2]);
+        
+        // 左邊界
+        ctx.beginPath();
+        ctx.moveTo(scaleX(currentX), topOriginY);
+        ctx.lineTo(scaleU(currentU), botOriginY - plotHeight);
+        ctx.stroke();
+        
+        // 右邊界
+        ctx.beginPath();
+        ctx.moveTo(scaleX(xEnd), topOriginY);
+        ctx.lineTo(scaleU(uEnd), botOriginY - plotHeight);
+        ctx.stroke();
+        
+        // 文字標籤
+        ctx.fillStyle = "#333";
+        ctx.font = "italic 14px Times New Roman";
+        ctx.fillText("dx", scaleX((currentX + xEnd)/2) - 5, topOriginY + 15);
+        ctx.fillText("du", scaleU((currentU + uEnd)/2) - 5, botOriginY - plotHeight - 5);
+    }
+
+    // 輔助繪圖函數
+    function drawAxis(y, labelX, labelFunc, color) {
+        ctx.strokeStyle = "#333"; ctx.lineWidth = 1; ctx.setLineDash([]);
+        ctx.beginPath(); ctx.moveTo(margin.left, y); ctx.lineTo(canvas.width - margin.right, y); ctx.stroke(); // X軸
+        ctx.beginPath(); ctx.moveTo(margin.left, y); ctx.lineTo(margin.left, y - plotHeight); ctx.stroke(); // Y軸
+        
+        ctx.fillStyle = color; ctx.font = "bold 16px Times New Roman";
+        ctx.fillText(labelX, canvas.width - margin.right + 10, y + 5);
+        ctx.fillStyle = "#555"; 
+        ctx.fillText(labelFunc, margin.left + 10, y - plotHeight + 20);
+    }
+
+    function drawCurve(func, min, max, mapX, mapY, color) {
+        ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 2;
+        let steps = 100;
+        for (let i = 0; i <= steps; i++) {
+            let v = min + (i / steps) * (max - min);
+            let x = mapX(v);
+            let y = mapY(func(v));
+            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+    }
+
+    function fillArea(func, start, end, mapX, mapY, color) {
+        ctx.fillStyle = color; ctx.beginPath();
+        ctx.moveTo(mapX(start), mapY(0));
+        let steps = 20;
+        for (let i = 0; i <= steps; i++) {
+            let v = start + (i / steps) * (end - start);
+            ctx.lineTo(mapX(v), mapY(func(v)));
+        }
+        ctx.lineTo(mapX(end), mapY(0));
+        ctx.fill();
+    }
+
+    slider.addEventListener('input', draw);
+    window.addEventListener('resize', draw);
+    draw(); // 初始化
+</script>
+
+</body>
+</html>
