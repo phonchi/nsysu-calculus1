@@ -1,6 +1,6 @@
 ---
 type: assignment
-date: 2025-12-06T9:00:00+3:30
+date: 2025-12-06T09:00:00+3:30
 title: 'Assignment #9'
 attachment: /static_files/assignments/Assignment9.pdf
 
