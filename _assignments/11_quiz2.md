@@ -3,6 +3,7 @@ type: assignment
 date: 2025-12-06T09:00:00+3:30
 title: 'Take home quiz #2'
 attachment: /static_files/assignments/Quiz2.pdf
+solutions: /static_files/assignments/Quiz2_sol.pdf
 
 due_event: 
     type: due
